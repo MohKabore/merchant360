@@ -13,14 +13,14 @@ import { slideYFade } from './app/animations';
 
 addIcons({
   addOutline, homeOutline, pricetagsOutline, flashOutline, settingsOutline,
-  cubeOutline, createOutline, trashOutline, searchOutline, funnelOutline
+  cubeOutline, createOutline, trashOutline, searchOutline, funnelOutline,
 });
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
 provideIonicAngular(),
-// provideIonicAngular({ navAnimation: slideYFade }),
-provideIonicAngular(),
+provideIonicAngular({ navAnimation: slideYFade }),
+// provideIonicAngular(),
     provideAnimations(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
   ],

@@ -5,10 +5,10 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen="false" style="padding: 5px;">
+<ion-content fullscreen="true">
   <!-- Filtres réutilisables -->
-  <!-- <app-search-toolbar [(value)]="search" (valueChange)="onSearchChange($event)" placeholder="Rechercher un produit…"></app-search-toolbar>
-  <app-category-chips [categories]="categories" [selected]="selectedCategoryId" (changed)="onCategoryChange($event)"></app-category-chips> -->
+  <app-search-toolbar [(value)]="search" (valueChange)="onSearchChange($event)" placeholder="Rechercher un produit…"></app-search-toolbar>
+  <app-category-chips [categories]="categories" [selected]="selectedCategoryId" (changed)="onCategoryChange($event)"></app-category-chips>
 
   <!-- Liste animée -->
   <div class="list-enter">
@@ -31,10 +31,7 @@
   </div>
 
   <!-- FAB -->
-
- <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-  <ion-fab-button (click)="goNew()" aria-label="Ajouter un produit">
-    <ion-icon slot="icon-only" name="add-outline"></ion-icon>
-  </ion-fab-button>
-</ion-fab>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="goNew()"><ion-icon name="add-outline"></ion-icon></ion-fab-button>
+  </ion-fab>
 </ion-content>
