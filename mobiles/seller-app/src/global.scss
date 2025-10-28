@@ -1,0 +1,79 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+@import '@ionic/angular/css/palettes/dark.system.css';
+
+:root{
+  --bg:#FAFAFB; --card:#FFFFFF; --ink:#1F2937; --muted:#6B7280;
+  --pri:#8E0E1B; --sec:#1B998B; --ok:#10B981; --warn:#F59E0B; --err:#EF4444;
+
+  --r-lg:18px; --r-md:12px; --r-sm:8px;
+  --sp-1:8px; --sp-2:12px; --sp-3:16px; --sp-4:20px; --sp-5:24px; --sp-6:32px;
+  --sh-sm:0 6px 16px rgba(0,0,0,.08); --sh-md:0 12px 28px rgba(0,0,0,.12);
+}
+
+/* Hooks Ionic */
+ion-content{ --background:var(--bg); color:var(--ink); }
+ion-toolbar{ --background:var(--card); --color:var(--ink); border-bottom:1px solid #EEE; }
+ion-fab-button, ion-button[color="primary"]{ --background:var(--pri); --color:#fff; }
+
+/* Prims UI */
+.card{background:var(--card);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:var(--sp-3);}
+.title{font-size:22px;font-weight:800;} .sub{font-size:14px;color:var(--muted);}
+.kpi{background:#fff;border-radius:var(--r-md);padding:var(--sp-3);box-shadow:var(--sh-sm);}
+.kpi .v{font-weight:800;font-size:20px;}
+.tap{transition:transform .08s ease, box-shadow .2s ease;} .tap:active{transform:scale(.98);}
+
+/* Animations utilitaires */
+.list-enter ion-item{opacity:0;transform:translateY(8px);animation:rise .28s ease-out forwards;}
+.list-enter ion-item:nth-child(1){animation-delay:30ms;} .list-enter ion-item:nth-child(2){animation-delay:60ms;}
+
+@keyframes rise{to{opacity:1;transform:none;}}
+
+/* Force le contraste et l’icône visible sur FAB et boutons primaires */
+ion-fab-button {
+  --background: var(--pri);
+  --background-activated: color-mix(in oklab, var(--pri) 90%, black 10%);
+  --background-hover: color-mix(in oklab, var(--pri) 96%, black 4%);
+  --box-shadow: var(--sh-sm);
+  --color: #fff;            /* <-- couleur de l’icône */
+}
+ion-fab-button ion-icon { color: #fff; } /* ceinture + bretelles */
+
+ion-button[color="primary"] {
+  --background: var(--pri);
+  --color: #fff;            /* texte / icône */
+}

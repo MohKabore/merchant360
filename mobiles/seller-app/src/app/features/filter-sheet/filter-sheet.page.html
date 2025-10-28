@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Produits</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="goNew()">
+        <ion-icon name="add-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <!-- Barre d’outils de filtres -->
+  <ion-toolbar>
+    <ion-searchbar
+      [(ngModel)]="search"
+      (ionInput)="onSearchChange($event.detail.value!)"
+      placeholder="Rechercher un produit…"
+      show-clear-button="focus"
+      animated="true">
+    </ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="openFilters()">
+        <ion-icon name="funnel-outline" slot="start"></ion-icon>
+        Filtres
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen="true">
+  <!-- Liste animée (inchangée) -->
+  <div class="list-enter">
+    <ion-list lines="none">
+      <ng-container *ngFor="let p of items; trackBy: trackId">
+        <app-product-item [p]="p" (click)="goEdit(p.id)"></app-product-item>
+      </ng-container>
+    </ion-list>
+  </div>
+
+  <div class="more" *ngIf="!eof">
+    <ion-button fill="outline" (click)="loadMore()">Charger plus</ion-button>
+  </div>
+
+  <div class="empty" *ngIf="!loading && items.length===0">
+    <ion-icon name="cube-outline"></ion-icon>
+    <div>Aucun produit</div>
+    <ion-button color="primary" (click)="goNew()">Créer un produit</ion-button>
+  </div>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="goNew()" aria-label="Ajouter un produit">
+      <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
