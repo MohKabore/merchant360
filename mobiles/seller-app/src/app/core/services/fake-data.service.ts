@@ -112,4 +112,11 @@ export class FakeDataService {
     await this.saveCache();
     return updated;
   }
+
+  async deleteProduct(id: string){
+  await this.init();
+  this.products = this.products.filter(p => p.id !== id);
+  await this.saveCache();
+  return true;
+}
 }

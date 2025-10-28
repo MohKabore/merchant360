@@ -82,3 +82,75 @@ ion-item.req.invalid ion-input { color: var(--err); }
 .bottom-cta ion-button[color="primary"] { --background: var(--pri); --color: #fff; }
 
 .spacer { height: 110px; }
+
+/* Espace de scroll sous le formulaire pour ne pas que le CTA masque les champs */
+ion-content {
+  --padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 96px);
+}
+
+/* CTA collant bien au-dessus de la tabbar */
+.bottom-cta {
+  position: fixed;
+  left: 12px; right: 12px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + var(--tabbar-height, 56px) + 12px);
+  display: flex; gap: 10px; justify-content: space-between;
+  z-index: 100; /* plus haut que la tabbar */
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,.08));
+}
+
+/* Style des boutons */
+.bottom-cta ion-button { flex: 1; height: 48px; border-radius: 14px; }
+.bottom-cta ion-button[color="primary"] { --background: var(--pri); --color: #fff; }
+/* <-- Annuler non transparent (remplace fill="outline") */
+.bottom-cta ion-button[color="light"] {
+  --background: #fff;
+  --color: var(--ink);
+  --border-color: #eee;
+  --border-width: 1px;
+}
+.spacer { height: 110px; } /* laisse de la place au CTA */
+.tile { cursor: pointer; }
+.tile.add { cursor: pointer; } /* tuile ajout déjà cliquable */
+
+.tile:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+
+/* laisse juste un peu de marge si besoin */
+ion-footer {
+  --background: #fff;
+  border-top: 1px solid #eee;
+}
+
+ion-footer ion-button[color="primary"] {
+  --background: var(--pri);
+  --color: #fff;
+  border-radius: 12px;
+}
+
+ion-footer ion-button[color="light"] {
+  --background: #fff;
+  --color: var(--ink);
+  --border-color: #ddd;
+  border-radius: 12px;
+}
+
+/* espace contenu (plus besoin d’anticiper le CTA fixed) */
+ion-content {
+  --padding-bottom: 16px; /* suffisant pour scroller le formulaire */
+}
+
+/* Footer docké */
+.edit-footer {
+  --background: transparent;            /* fond de footer transparent */
+  padding: 8px 12px calc(env(safe-area-inset-bottom, 0px) + 8px);
+  border-top: 0;                        /* on gère la bordure via la carte du bouton si tu veux */
+}
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // padding: 12px 0;
+ 
+}
+
+/* tu peux retirer .spacer si tu n’en as plus besoin */
+.spacer { height: 0; }

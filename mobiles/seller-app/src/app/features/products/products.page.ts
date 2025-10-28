@@ -5,46 +5,47 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Category, Product } from 'src/app/core/models/dtos';
 import { FakeDataService } from 'src/app/core/services/fake-data.service';
-import { CategoryChipsComponent } from 'src/app/core/ui/category-chips/category-chips.component';
 import { ProductItemComponent } from 'src/app/core/ui/product-item/product-item.component';
 import { SearchToolbarComponent } from 'src/app/core/ui/search-toolbar/search-toolbar.component';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CategoryDockComponent } from 'src/app/core/ui/category-dock/category-dock.component';
-import { CategoryGridComponent } from 'src/app/core/ui/category-grid/category-grid.component';
+
 
 @Component({
-  standalone:true,
-  selector:'app-products',
-  imports:[CommonModule, IonicModule, FormsModule, SearchToolbarComponent
+  standalone: true,
+  selector: 'app-products',
+  imports: [CommonModule, IonicModule, FormsModule, SearchToolbarComponent
     , CategoryDockComponent
     // ,CategoryGridComponent
     , ProductItemComponent
   ],
-  templateUrl:'./products.page.html',
-  styleUrls:['./products.page.scss']
+  templateUrl: './products.page.html',
+  styleUrls: ['./products.page.scss']
 })
 export class ProductsPage {
+  loading = true; categories: Category[] = []; items: Product[] = [];
+  search = ''; selectedCategoryId: string | null = null;
+  skip = 0; pageSize = 50; eof = false;
+  placeholderImg = 'https://picsum.photos/seed/placeholder/200/200';
+
+
   constructor(
-    private data:FakeDataService,
-    private alert:AlertController,
-    private toast:ToastController,
-    private router:Router,
-     private sanitizer: DomSanitizer
-  ) {}
+    private data: FakeDataService,
+    private alert: AlertController,
+    private toast: ToastController,
+    private router: Router,
+    private sanitizer: DomSanitizer
+  ) { }
 
-  // état simple
-  loading=true; categories:Category[]=[]; items:Product[]=[];
-  search=''; selectedCategoryId:string|null=null;
-  skip=0; pageSize=50; eof=false;
 
-  async ionViewWillEnter(){ await this.init(); }
+  async ionViewWillEnter() { await this.init(); }
 
-  async init(){
-    this.loading=true;
+  async init() {
+    this.loading = true;
     this.categories = await this.data.listCategories();
-    this.skip=0; this.eof=false;
+    this.skip = 0; this.eof = false;
     await this.reloadList(true);
-    this.loading=false;
+    this.loading = false;
   }
 
   addSvg: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
@@ -56,31 +57,84 @@ export class ProductsPage {
     `)
   );
 
-  async onSearchChange(val:string){ this.search = val; this.skip=0; this.eof=false; await this.reloadList(true); }
-  async onCategoryChange(id:string|null){ this.selectedCategoryId = id; this.skip=0; this.eof=false; await this.reloadList(true); }
+  async onSearchChange(val: string) { this.search = val; this.skip = 0; this.eof = false; await this.reloadList(true); }
+  async onCategoryChange(id: string | null) { this.selectedCategoryId = id; this.skip = 0; this.eof = false; await this.reloadList(true); }
 
-  async reloadList(reset:boolean=false){
-    const res = await this.data.listProducts({ search:this.search, categoryId:this.selectedCategoryId??undefined, skip:this.skip, take:this.pageSize });
+  async reloadList(reset: boolean = false) {
+    const res = await this.data.listProducts({ search: this.search, categoryId: this.selectedCategoryId ?? undefined, skip: this.skip, take: this.pageSize });
     this.items = reset ? res : [...this.items, ...res];
-    if(res.length < this.pageSize) this.eof = true;
+    if (res.length < this.pageSize) this.eof = true;
   }
 
-  async loadMore(){ if(this.eof) return; this.skip += this.pageSize; await this.reloadList(false); }
+  async loadMore() { if (this.eof) return; this.skip += this.pageSize; await this.reloadList(false); }
 
-  goNew(){ this.router.navigateByUrl('/product/new'); }
-  goEdit(id:string){ this.router.navigate(['tabs/products', id]); }
+  goNew() { this.router.navigateByUrl('tabs/products/new'); }
+  goEdit(id: string) { this.router.navigate(['tabs/products', id]); }
 
-  async confirmDelete(p:Product){
+  async confirmDelete(p: Product) {
     const a = await this.alert.create({
-      header:'Supprimer', message:`Supprimer <b>${p.name}</b> ?`,
-      buttons:[{text:'Annuler',role:'cancel'},{text:'Supprimer',role:'destructive',handler:async()=>{
-        // mock delete local
-        this.items = this.items.filter(x=>x.id!==p.id);
-        (await this.toast.create({message:'Produit supprimé',duration:1200})).present();
-      }}]
+      header: 'Supprimer', message: `Supprimer <b>${p.name}</b> ?`,
+      buttons: [{ text: 'Annuler', role: 'cancel' }, {
+        text: 'Supprimer', role: 'destructive', handler: async () => {
+          // mock delete local
+          this.items = this.items.filter(x => x.id !== p.id);
+          (await this.toast.create({ message: 'Produit supprimé', duration: 1200 })).present();
+        }
+      }]
     }); await a.present();
   }
 
-  trackId(_:number,p:Product){ return p.id; }
-  get totalLabel(){ return `${this.items.length}${this.eof ? '' : '+'}`; }
+  trackId(_: number, p: Product) { return p.id; }
+  get totalLabel() { return `${this.items.length}${this.eof ? '' : '+'}`; }
+
+  async duplicate(p: Product, sliding?: HTMLIonItemSlidingElement) {
+    sliding && (await sliding.close());
+    const clone = { ...p, id: undefined, name: p.name + ' (copie)' };
+    await this.data.upsertProduct(clone);
+    (await this.toast.create({ message: 'Produit dupliqué', duration: 1200 })).present();
+    this.skip = 0; this.eof = false; await this.reloadList(true);
+  }
+
+  // Confirmation & suppression
+  async confirmDeleteFromList(p: Product, sliding?: HTMLIonItemSlidingElement) {
+    const a = await this.alert.create({
+      header: 'Supprimer',
+      message: `Supprimer <b>${p.name}</b> ?`,
+      buttons: [
+        { text: 'Annuler', role: 'cancel', handler: async () => sliding && (await sliding.close()) },
+        { text: 'Supprimer', role: 'destructive', handler: async () => this.deleteFromList(p, sliding) }
+      ]
+    });
+    await a.present();
+  }
+
+  private async deleteFromList(p: Product, sliding?: HTMLIonItemSlidingElement) {
+    // supprime côté fake store
+    await this.data.deleteProduct(p.id);
+    // supprime immédiatement de l’affichage
+    this.items = this.items.filter(x => x.id !== p.id);
+    sliding && (await sliding.close());
+    (await this.toast.create({ message: 'Produit supprimé', duration: 1200, color: 'success' })).present();
+  }
+
+  async editFromList(p: Product, sliding?: HTMLIonItemSlidingElement) {
+    sliding && (await sliding.close());
+    this.goEdit(p.id);
+  }
+
+  async toggleActive(p: Product, sliding?: HTMLIonItemSlidingElement) {
+    sliding && (await sliding.close());
+
+    // met à jour localement pour feedback instantané
+    p.isActive = !p.isActive;
+
+    // persiste via upsertProduct (id existant => update)
+    await this.data.upsertProduct({ id: p.id, isActive: p.isActive });
+
+    (await this.toast.create({
+      message: p.isActive ? 'Produit activé' : 'Produit désactivé',
+      duration: 1000
+    })).present();
+  }
+
 }

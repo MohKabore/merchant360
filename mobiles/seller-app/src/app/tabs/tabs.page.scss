@@ -1,3 +1,16 @@
 .more{ display:grid; place-items:center; padding:12px; }
 .empty{ padding:32px; display:grid; place-items:center; gap:10px; color:var(--muted); }
 .empty ion-icon{ font-size:44px; color:#c9c9c9; }
+
+// :host { --tabbar-height: 56px; }
+
+// ion-tab-bar {
+//   height: var(--tabbar-height);
+//   z-index: 3;
+// }
+:host { --tabbar-height: 56px; }
+
+ion-tab-bar {
+  height: var(--tabbar-height);
+  z-index: 3;
+}

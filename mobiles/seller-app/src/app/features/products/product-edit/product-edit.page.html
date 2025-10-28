@@ -1,10 +1,19 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start"><ion-back-button defaultHref="/tabs/products"></ion-back-button></ion-buttons>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/products"></ion-back-button>
+    </ion-buttons>
+
     <ion-title>{{ isNew ? 'Nouveau produit' : 'Modifier le produit' }}</ion-title>
+
+    <!-- CTA SUPPRIMER (affiché seulement en édition) -->
+    <ion-buttons slot="end" *ngIf="!isNew">
+      <ion-button color="danger" (click)="confirmDelete()" aria-label="Supprimer">
+        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
 <ion-content fullscreen="true" class="ion-padding">
 
   <!-- Média / Galerie -->
@@ -25,7 +34,7 @@
       </div>
 
       <!-- Autres images -->
-      <div class="tile" *ngFor="let img of images.slice(1); let i = index">
+      <!-- <div class="tile" *ngFor="let img of images.slice(1); let i = index">
         <img [src]="img" alt="img">
         <div class="actions">
           <ion-button fill="clear" size="small" (click)="moveLeft(i+1)">
@@ -41,11 +50,29 @@
             <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
           </ion-button>
         </div>
+      </div> -->
+
+      <div class="tile" *ngFor="let img of images.slice(1); let i = index" (click)="setCover(i+1)" role="button"
+        title="Définir en couverture">
+        <img [src]="img" alt="img">
+
+        <!-- actions mini (optionnelles) -->
+        <div class="actions" (click)="$event.stopPropagation()">
+          <ion-button fill="clear" size="small" (click)="moveLeft(i+1)">
+            <ion-icon name="chevron-back-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" (click)="moveRight(i+1)">
+            <ion-icon name="chevron-forward-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" color="danger" (click)="removeImage(i+1)">
+            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
       </div>
 
       <!-- Tuile d'ajout -->
       <label class="tile add">
-        <input type="file" accept="image/*" multiple (change)="onFilesSelected($event)"/>
+        <input type="file" accept="image/*" multiple (change)="onFilesSelected($event)" />
         <div class="add-inner">
           <ion-icon name="image-outline"></ion-icon>
           <div>Ajouter des images</div>
@@ -100,16 +127,24 @@
       </ion-item>
     </ion-list>
   </form>
-
-  <!-- Espace pour CTA -->
-  <div class="spacer"></div>
-
-  <!-- CTA collant -->
-  <div class="bottom-cta">
-    <ion-button fill="outline" (click)="cancel()">Annuler</ion-button>
-    <ion-button color="primary" [disabled]="saving || form.invalid" (click)="save()">
+</ion-content>
+<!-- <ion-footer >
+  <div class="footer">
+    <ion-button fill="solid" expand="block" color="light" (click)="cancel()">Annuler</ion-button>
+    <ion-button fill="solid" expand="block" color="primary" [disabled]="saving || form.invalid" (click)="save()">
       <ion-spinner *ngIf="saving" name="crescent"></ion-spinner>
       <span *ngIf="!saving">Enregistrer</span>
     </ion-button>
   </div>
-</ion-content>
+</ion-footer> -->
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6"><ion-button expand="block" color="light" (click)="cancel()">Annuler</ion-button></ion-col>
+        <ion-col size="6"><ion-button expand="block" color="primary" [disabled]="saving || form.invalid" (click)="save()">Enregistrer</ion-button></ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

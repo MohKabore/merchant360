@@ -17,13 +17,58 @@
   <!-- <app-category-grid [categories]="categories" subLabel="Voir les produits" (changed)="onCategoryChange($event)">
   </app-category-grid> -->
 
-  <div class="list-enter">
-    <ion-list lines="none">
-      <ng-container *ngFor="let p of items; trackBy: trackId">
-        <app-product-item [p]="p" (click)="goEdit(p.id)"></app-product-item>
-      </ng-container>
-    </ion-list>
-  </div>
+<ion-list lines="none" class="plist">
+  <ng-container *ngFor="let p of items; trackBy: trackId">
+    <ion-item-sliding #sliding>
+
+      <!-- Options côté GAUCHE -->
+      <ion-item-options side="start">
+        <!-- ÉDITER -->
+        <ion-item-option color="primary" (click)="editFromList(p, sliding)">
+          <ion-icon slot="start" name="create-outline"></ion-icon>
+          Éditer
+        </ion-item-option>
+
+        <!-- ACTIVER / DÉSACTIVER -->
+        <ion-item-option [color]="p.isActive ? 'warning' : 'success'" (click)="toggleActive(p, sliding)">
+          <ion-icon slot="start" [name]="p.isActive ? 'pause-outline' : 'play-outline'"></ion-icon>
+          {{ p.isActive ? 'Désactiver' : 'Activer' }}
+        </ion-item-option>
+      </ion-item-options>
+
+      <!-- ITEM PRINCIPAL -->
+      <ion-item button detail="false">
+        <ion-avatar slot="start">
+          <img [src]="p.images?.[0]?.url || placeholderImg" alt="img" />
+        </ion-avatar>
+
+        <ion-label>
+          <h3>{{ p.name }}</h3>
+          <p>
+            {{ p.price | number:'1.0-0' }} {{ p.currency }}
+            • Stock: {{ p.stockOnHand }}
+          </p>
+        </ion-label>
+
+        <ion-badge [color]="p.isActive ? 'success' : 'medium'">
+          {{ p.isActive ? 'Actif' : 'Inactif' }}
+        </ion-badge>
+      </ion-item>
+
+      <!-- Options côté DROITE -->
+      <ion-item-options side="end">
+        <ion-item-option color="medium" (click)="duplicate(p, sliding)">
+          Dupliquer
+        </ion-item-option>
+        <ion-item-option color="danger" (click)="confirmDeleteFromList(p, sliding)">
+          <ion-icon slot="start" name="trash-outline"></ion-icon>
+          Supprimer
+        </ion-item-option>
+      </ion-item-options>
+
+    </ion-item-sliding>
+  </ng-container>
+</ion-list>
 
   <!-- Load more -->
   <div class="more" *ngIf="!eof">

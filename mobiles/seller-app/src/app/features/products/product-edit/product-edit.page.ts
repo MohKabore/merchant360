@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule, ToastController,AlertController } from '@ionic/angular';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FakeDataService } from 'src/app/core/services/fake-data.service';
@@ -19,6 +19,7 @@ export class ProductEditPage implements OnInit {
   private router = inject(Router);
   private data = inject(FakeDataService);
   private toast = inject(ToastController);
+  private alert = inject(AlertController);
 
   id: string | null = null;
   isNew = true;
@@ -40,16 +41,16 @@ export class ProductEditPage implements OnInit {
     description: ['']
   });
 
-  async ngOnInit(){
+  async ngOnInit() {
     this.categories = await this.data.listCategories();
 
     const paramId = this.route.snapshot.paramMap.get('id');
     this.isNew = !paramId || paramId === 'new';
     this.id = this.isNew ? null : paramId;
 
-    if (!this.isNew && this.id){
+    if (!this.isNew && this.id) {
       const p = await this.data.getProductById(this.id);
-      if (p){
+      if (p) {
         this.form.patchValue({
           name: p.name,
           price: p.price,
@@ -64,7 +65,7 @@ export class ProductEditPage implements OnInit {
         this.router.navigateByUrl('/product/new');
       }
     } else {
-      if (this.categories.length > 0 && !this.form.value.categoryId){
+      if (this.categories.length > 0 && !this.form.value.categoryId) {
         this.form.patchValue({ categoryId: this.categories[0].id });
       }
     }
@@ -80,7 +81,7 @@ export class ProductEditPage implements OnInit {
     return Promise.all(files.map(toUrl));
   }
 
-  async onFilesSelected(ev: Event){
+  async onFilesSelected(ev: Event) {
     const input = ev.target as HTMLInputElement;
     const files = Array.from(input.files ?? []);
     if (!files.length) return;
@@ -94,35 +95,35 @@ export class ProductEditPage implements OnInit {
     input.value = '';
   }
 
-  setCover(i: number){
-    if (i<=0 || i>=this.images.length) return;
-    const arr = [...this.images];
-    const [img] = arr.splice(i,1);
-    this.images = [img, ...arr]; // passe en couverture (index 0)
+  // setCover(i: number){
+  //   if (i<=0 || i>=this.images.length) return;
+  //   const arr = [...this.images];
+  //   const [img] = arr.splice(i,1);
+  //   this.images = [img, ...arr]; // passe en couverture (index 0)
+  // }
+
+  removeImage(i: number) {
+    this.images = this.images.filter((_, idx) => idx !== i);
   }
 
-  removeImage(i: number){
-    this.images = this.images.filter((_,idx)=> idx !== i);
-  }
-
-  moveLeft(i: number){
-    if (i<=0) return;
+  moveLeft(i: number) {
+    if (i <= 0) return;
     const arr = [...this.images];
-    [arr[i-1], arr[i]] = [arr[i], arr[i-1]];
+    [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]];
     this.images = arr;
   }
 
-  moveRight(i: number){
-    if (i>=this.images.length-1) return;
+  moveRight(i: number) {
+    if (i >= this.images.length - 1) return;
     const arr = [...this.images];
-    [arr[i+1], arr[i]] = [arr[i], arr[i+1]];
+    [arr[i + 1], arr[i]] = [arr[i], arr[i + 1]];
     this.images = arr;
   }
 
-  async save(){
+  async save() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      (await this.toast.create({ message: 'Corrige les champs en rouge', duration: 1500, color: 'warning'})).present();
+      (await this.toast.create({ message: 'Corrige les champs en rouge', duration: 1500, color: 'warning' })).present();
       return;
     }
     this.saving = true;
@@ -143,11 +144,39 @@ export class ProductEditPage implements OnInit {
     await this.data.upsertProduct(payload);
     this.saving = false;
 
-    (await this.toast.create({ message: 'Produit enregistré', duration: 1200, color: 'success'})).present();
+    (await this.toast.create({ message: 'Produit enregistré', duration: 1200, color: 'success' })).present();
     this.router.navigateByUrl('/tabs/products');
   }
 
-  cancel(){ this.router.navigateByUrl('/tabs/products'); }
+  cancel() { this.router.navigateByUrl('/tabs/products'); }
 
-  get f(){ return this.form.controls; }
+  get f() { return this.form.controls; }
+  async setCover(i: number) {
+    if (i <= 0 || i >= this.images.length) return;
+    const arr = [...this.images];
+    const [img] = arr.splice(i, 1);
+    this.images = [img, ...arr];
+    (await this.toast.create({ message: 'Définie en couverture', duration: 900 })).present();
+  }
+
+  async confirmDelete(){
+  if (this.isNew || !this.id) return;
+
+  const alert = await this.alert.create({
+    header: 'Supprimer',
+    message: 'Confirmer la suppression de ce produit ?',
+    buttons: [
+      { text: 'Annuler', role: 'cancel' },
+      { text: 'Supprimer', role: 'destructive', handler: () => this.deleteNow() }
+    ]
+  });
+  await alert.present();
+}
+
+private async deleteNow(){
+  if (!this.id) return;
+  await this.data.deleteProduct(this.id);
+  (await this.toast.create({ message: 'Produit supprimé', duration: 1200, color: 'success' })).present();
+  this.router.navigateByUrl('/tabs/products');
+}
 }
