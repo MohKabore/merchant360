@@ -1,92 +1,16 @@
-/* ---------- Layout & paddings ---------- */
 ion-content {
-  /* évite que la liste passe sous la tabbar et le mini-FAB */
   --padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--tabbar-height, 56px) + 64px);
 }
 
-.more { display: grid; place-items: center; padding: 12px; }
-.empty { padding: 32px; display: grid; place-items: center; gap: 10px; color: var(--muted); }
-.empty ion-icon { font-size: 44px; color: #c9c9c9; }
+.plist { padding: 8px 10px 0; }
 
-/* ---------- Petit FAB “coin” collé tabbar ---------- */
-.edge-fab {
-  /* collé au bord droit, juste au-dessus de la tabbar + safe area */
-  right: 12px;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + var(--tabbar-height, 56px) + 8px);
-  z-index: 4; /* au-dessus de la tabbar */
-}
-.edge-fab ion-fab-button {
-  --background: var(--pri);
-  --color: #fff; /* icône */
-  --box-shadow: var(--sh-sm);
-  width: 44px; height: 44px; /* compact */
-  border-radius: 14px;
-}
-
-/* ---------- “WOW” pour la liste produits ---------- */
-.plist {
-  padding: 8px 10px 0;
-}
-
-/* on améliore app-product-item (classe .pi utilisée plus tôt) */
-::ng-deep app-product-item .pi {
-  --background: #fff;
-  margin: 10px 4px;
-  border-radius: 16px;
-  box-shadow: var(--sh-sm);
-  position: relative;
-  overflow: hidden;
-  isolation: isolate; /* pour les pseudo-éléments */
-
-  /* léger effet de bordure dégradée sur la gauche */
-}
-::ng-deep app-product-item .pi::before {
-  content: "";
-  position: absolute; inset: 0;
-  border-radius: 16px;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, color-mix(in oklab, var(--pri) 30%, transparent) 0%, transparent 8%)
-    /* + on peut ajouter un léger vignettage haut */;
-  opacity: .14;
-  z-index: -1;
-}
-
-/* pouce plus premium */
-::ng-deep app-product-item .thumb {
-  width: 66px; height: 66px; border-radius: 12px; overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,.06);
-}
-::ng-deep app-product-item .thumb img { object-fit: cover; width: 100%; height: 100%; }
-
-/* typographie plus marquée */
-::ng-deep app-product-item .name { font-weight: 800; letter-spacing: .1px; }
-::ng-deep app-product-item .meta { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
-
-/* hover/tap subtile */
-::ng-deep app-product-item .pi { transition: transform .08s ease, box-shadow .2s ease; }
-::ng-deep app-product-item .pi:active { transform: translateY(1px); }
-::ng-deep app-product-item .pi:hover { box-shadow: var(--sh-md); }
-
-/* badge état plus lisible */
-::ng-deep app-product-item ion-badge {
-  border-radius: 999px; padding: 6px 10px; font-weight: 700;
-}
-
-/* animation entrée items (déjà safe) */
 .list-enter ion-item {
   opacity: 0; transform: translateY(8px);
-  animation: rise .28s ease-out forwards;
-  pointer-events: auto;
+  animation: rise .28s ease-out forwards; pointer-events: auto;
 }
 @keyframes rise { to { opacity: 1; transform: none; } }
 
-.subbar { --background:#fff; border-bottom:1px solid #eee; }
-.subbar .h-title { font-weight: 800; font-size: 16px; }
-.subbar .h-sub { font-size: 12px; color: var(--muted); }
-.subbar .subbar-left { padding: 6px 12px; }
-
-/* Collage parfait : 0px d’écart avec la tabbar */
+/* FAB coin collé à la tabbar */
 .edge-fab {
   right: 12px;
   bottom: calc(env(safe-area-inset-bottom, 0px) + var(--tabbar-height, 56px));
@@ -96,14 +20,10 @@ ion-content {
   --background: var(--pri);
   --color: #fff;
   --box-shadow: var(--sh-sm);
-  width: 44px; height: 44px;
-  border-radius: 14px;
+  width: 44px; height: 44px; border-radius: 14px;
 }
 
-/* Liste premium */
-.plist { padding: 8px 10px 0; }
-
-/* Amélioration visuelle de la carte produit */
+/* polish cartes produit (si tu veux les conserver) */
 ::ng-deep app-product-item .pi {
   --background: #fff;
   margin: 10px 4px;
@@ -118,9 +38,9 @@ ion-content {
 ::ng-deep app-product-item .meta { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
 ::ng-deep app-product-item ion-badge { border-radius: 999px; padding: 6px 10px; font-weight: 700; }
 
-/* Padding bas pour ne pas masquer le dernier item par la tabbar + FAB */
-ion-content { --padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--tabbar-height, 56px) + 64px); }
-
-/* Animation d’entrée non bloquante */
-.list-enter ion-item { opacity: 0; transform: translateY(8px); animation: rise .28s ease-out forwards; pointer-events: auto; }
-@keyframes rise { to { opacity:1; transform:none; } }
+.more {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 0;
+}

@@ -10,7 +10,7 @@
   <app-search-toolbar [(value)]="search" (valueChange)="onSearchChange($event)"
     placeholder="Rechercher un produit…"></app-search-toolbar>
 
-  <app-category-dock [categories]="categories" [selected]="selectedCategoryId" [counts]="undefined" [showCount]="false"
+  <app-category-dock [categories]="categories" [sticky]="true" [selected]="selectedCategoryId" [counts]="categories.length" [showCount]="true"
     (changed)="onCategoryChange($event)">
   </app-category-dock>
 

@@ -1,3 +1,19 @@
-<p>
-  category-dock works!
-</p>
+<div class="dock" [class.compact]="compact" [class.sticky]="sticky">
+  <!-- Carte "Toutes" -->
+  <button class="card" [class.active]="selected===null" (click)="select(null)">
+    <div class="avatar" [style.background]="avatarBg(0)">★</div>
+    <div class="name">Toutes</div>
+  </button>
+
+  <!-- Catégories -->
+  <button *ngFor="let c of categories; let i = index" class="card" [class.active]="selected===c.id"
+    (click)="select(c.id)">
+    <div class="avatar" [style.background]="avatarBg(i+1)">
+      {{ initial(c.name) }}
+    </div>
+    <div class="name" [title]="c.name">{{ c.name }}</div>
+    <div *ngIf="showCount && counts?.[c.id] !== undefined" class="count">
+      {{ counts![c.id] }}
+    </div>
+  </button>
+</div>
