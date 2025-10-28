@@ -8,17 +8,22 @@ import { addIcons } from 'ionicons';
 import {
   addOutline, homeOutline, pricetagsOutline, flashOutline, settingsOutline,
   cubeOutline, createOutline, searchOutline, funnelOutline,
-  imageOutline, trashOutline,
+  imageOutline, trashOutline,removeOutline,
   chevronBackOutline, chevronForwardOutline,
-  starOutline
+  starOutline,
+  cashOutline,
+  ellipsisHorizontalOutline,
+  printOutline,
+  shareOutline,
+  closeOutline
 } from 'ionicons/icons';
 import { slideYFade } from './app/animations';
 
 addIcons({
   addOutline, homeOutline, pricetagsOutline, flashOutline, settingsOutline,
   cubeOutline, createOutline, trashOutline, searchOutline, funnelOutline,
-  imageOutline, 
-  chevronBackOutline, chevronForwardOutline,
+  imageOutline, removeOutline,cashOutline,ellipsisHorizontalOutline,
+  chevronBackOutline, chevronForwardOutline,printOutline,shareOutline,closeOutline,
   starOutline
 });
 bootstrapApplication(AppComponent, {

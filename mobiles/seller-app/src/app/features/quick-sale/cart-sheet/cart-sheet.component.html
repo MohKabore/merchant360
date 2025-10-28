@@ -1,0 +1,128 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title>Votre panier</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()"><ion-icon name="close-outline" slot="icon-only"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen="true">
+  <!-- Lignes -->
+  <ion-list lines="none">
+    <ion-item>
+      <ion-label><h2>Articles</h2></ion-label>
+      <ion-button fill="clear" color="danger" (click)="clearNow()">Vider</ion-button>
+    </ion-item>
+
+    <ion-item *ngFor="let l of cart">
+      <ion-avatar slot="start"><img [src]="l.image || 'https://picsum.photos/seed/placeholder/120/120'" /></ion-avatar>
+      <ion-label>
+        <h3>{{ l.name }}</h3>
+        <p>
+          <ion-text (click)="editPrice.emit(l)" class="tap-strong">{{ l.price | number:'1.0-0' }} {{ l.currency }}</ion-text>
+          <ion-text color="medium" style="margin-left:8px;" (click)="editLineDiscount.emit(l)">
+            Remise
+            <ng-container *ngIf="l.lineDiscount">(-{{ l.lineDiscount | number:'1.0-0' }} {{ l.currency }})</ng-container>
+          </ion-text>
+        </p>
+      </ion-label>
+      <ion-buttons slot="end">
+        <ion-button fill="clear" (click)="dec.emit(l)"><ion-icon name="remove-outline"></ion-icon></ion-button>
+        <ion-chip>{{ l.qty }}</ion-chip>
+        <ion-button fill="clear" (click)="inc.emit(l)"><ion-icon name="add-outline"></ion-icon></ion-button>
+        <ion-button fill="clear" color="danger" (click)="rm.emit(l)"><ion-icon name="trash-outline"></ion-icon></ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+
+  <!-- Totaux -->
+  <ion-list lines="full">
+    <ion-item>
+      <ion-label>Sous-total</ion-label>
+      <ion-note slot="end">{{ subTotal | number:'1.0-0' }} {{ currency }}</ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-label>Remise panier</ion-label>
+      <ion-input type="number" [ngModel]="discount" (ngModelChange)="onDiscountChange($event)"></ion-input>
+      <ion-note slot="end">{{ currency }}</ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-label><strong>Total</strong></ion-label>
+      <ion-note slot="end"><strong>{{ total | number:'1.0-0' }} {{ currency }}</strong></ion-note>
+    </ion-item>
+  </ion-list>
+
+  <!-- PAIEMENT -->
+  <ion-list lines="full">
+    <ion-item>
+      <ion-label>Type de paiement</ion-label>
+      <ion-segment [(ngModel)]="paymentType" (ionChange)="recompute()">
+        <ion-segment-button value="Total"><ion-label>Total</ion-label></ion-segment-button>
+        <ion-segment-button value="Partial"><ion-label>Partiel</ion-label></ion-segment-button>
+        <ion-segment-button value="Credit"><ion-label>Crédit</ion-label></ion-segment-button>
+      </ion-segment>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Mode</ion-label>
+      <ion-segment [ngModel]="paymentMethod" (ngModelChange)="onPaymentModeChange($event)">
+        <ion-segment-button value="Cash"><ion-label>Cash</ion-label></ion-segment-button>
+        <ion-segment-button value="Card"><ion-label>Carte</ion-label></ion-segment-button>
+        <ion-segment-button value="MobileMoney"><ion-label>Mobile Money</ion-label></ion-segment-button>
+      </ion-segment>
+    </ion-item>
+
+    <ion-item *ngIf="paymentMethod==='MobileMoney'">
+      <ion-label>Opérateur</ion-label>
+      <ion-segment [(ngModel)]="mobileOperator">
+        <ion-segment-button value="Wave"><ion-label>Wave</ion-label></ion-segment-button>
+        <ion-segment-button value="OrangeMoney"><ion-label>OM</ion-label></ion-segment-button>
+        <ion-segment-button value="MoMo"><ion-label>MoMo</ion-label></ion-segment-button>
+      </ion-segment>
+    </ion-item>
+
+    <ion-item *ngIf="paymentType==='Total'">
+      <ion-label>Montant payé</ion-label>
+      <ion-note slot="end">{{ total | number:'1.0-0' }} {{ currency }}</ion-note>
+    </ion-item>
+
+    <ng-container *ngIf="paymentType==='Partial'">
+      <ion-item>
+        <ion-label>Montant payé</ion-label>
+        <ion-input type="number" [ngModel]="amountPaid" (ngModelChange)="onAmountPaidChange($event)" placeholder="0"></ion-input>
+        <ion-note slot="end">{{ currency }}</ion-note>
+      </ion-item>
+      <ion-item>
+        <ion-label>Dû</ion-label>
+        <ion-note slot="end">{{ amountDue | number:'1.0-0' }} {{ currency }}</ion-note>
+      </ion-item>
+    </ng-container>
+
+    <ion-item *ngIf="paymentType==='Credit'">
+      <ion-label>Dû</ion-label>
+      <ion-note slot="end">{{ total | number:'1.0-0' }} {{ currency }}</ion-note>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row class="ion-align-items-center">
+        <ion-col size="6">
+          <ion-text>
+            <h2 class="ion-no-margin">{{ total | number:'1.0-0' }} {{ currency }}</h2>
+            <p class="ion-no-margin" style="opacity:.7">Total TTC</p>
+          </ion-text>
+        </ion-col>
+        <ion-col size="6">
+          <ion-button expand="block" color="primary" (click)="payNow()">
+            <ion-icon name="cash-outline" slot="start"></ion-icon>
+            Encaisser
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

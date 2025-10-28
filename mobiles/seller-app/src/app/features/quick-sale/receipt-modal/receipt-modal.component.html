@@ -1,0 +1,71 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Ticket de caisse</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="share()" aria-label="Partager"><ion-icon name="share-outline"></ion-icon></ion-button>
+      <ion-button (click)="print()" aria-label="Imprimer"><ion-icon name="print-outline"></ion-icon></ion-button>
+      <ion-button (click)="close()" aria-label="Fermer"><ion-icon name="close-outline"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="receipt-area" class="receipt">
+    <div class="hero">
+      <ion-avatar *ngIf="receipt?.merchant?.logoUrl" class="logo">
+        <img [src]="receipt.merchant.logoUrl" alt="logo"/>
+      </ion-avatar>
+      <div class="title">{{ receipt?.merchant?.name || 'Merchant360' }}</div>
+      <div class="muted" *ngIf="receipt?.merchant?.address">{{ receipt.merchant.address }}</div>
+      <div class="muted" *ngIf="receipt?.merchant?.phone">{{ receipt.merchant.phone }}</div>
+    </div>
+
+    <ion-list lines="none" class="meta">
+      <ion-item><ion-label>Reçu</ion-label><ion-note slot="end">#{{ receipt.id }}</ion-note></ion-item>
+      <ion-item><ion-label>Date</ion-label><ion-note slot="end">{{ receipt.createdAt | date:'medium' }}</ion-note></ion-item>
+      <ion-item><ion-label>Paiement</ion-label><ion-note slot="end">{{ receipt.paymentMethod }}</ion-note></ion-item>
+    </ion-list>
+
+    <ion-list lines="none" class="lines">
+      <ion-item class="hdr">
+        <ion-label>Article</ion-label>
+        <ion-note slot="end">Qté × PU</ion-note>
+      </ion-item>
+
+      <ion-item *ngFor="let l of receipt.lines">
+        <ion-label>
+          <div class="ln">{{ l.name }}</div>
+          <div class="muted" *ngIf="l.lineDiscount">Remise: -{{ l.lineDiscount | number:'1.0-0' }} {{ l.currency }}</div>
+        </ion-label>
+        <ion-note slot="end">{{ l.qty }} × {{ l.price | number:'1.0-0' }} {{ l.currency }}</ion-note>
+      </ion-item>
+    </ion-list>
+
+    <ion-list lines="full" class="totals">
+      <ion-item>
+        <ion-label>Sous-total</ion-label>
+        <ion-note slot="end">{{ receipt.subTotal | number:'1.0-0' }} {{ receipt.currency }}</ion-note>
+      </ion-item>
+      <ion-item>
+        <ion-label>Remise</ion-label>
+        <ion-note slot="end">-{{ receipt.discount | number:'1.0-0' }} {{ receipt.currency }}</ion-note>
+      </ion-item>
+      <ion-item>
+        <ion-label><strong>Total</strong></ion-label>
+        <ion-note slot="end"><strong>{{ receipt.total | number:'1.0-0' }} {{ receipt.currency }}</strong></ion-note>
+      </ion-item>
+      <ion-item *ngIf="receipt.cash != null">
+        <ion-label>Reçu</ion-label>
+        <ion-note slot="end">{{ receipt.cash | number:'1.0-0' }} {{ receipt.currency }}</ion-note>
+      </ion-item>
+      <ion-item *ngIf="receipt.change != null">
+        <ion-label>Rendu</ion-label>
+        <ion-note slot="end">{{ receipt.change | number:'1.0-0' }} {{ receipt.currency }}</ion-note>
+      </ion-item>
+    </ion-list>
+
+    <div class="foot">
+      Merci pour votre achat !
+    </div>
+  </div>
+</ion-content>

@@ -49,6 +49,7 @@ export const routes: Routes = [
       { path:'products',   loadChildren:()=>import('../features/products/products.route').then(m=>m.routes) },
       { path:'quick-sale', loadChildren:()=>import('../features/quick-sale/quick-sale.route').then(m=>m.routes  ) },
       { path:'settings',   loadChildren:()=>import('../features/settings/settings.route').then(m=>m.routes) },
+      // { path:'sales-history',   loadChildren:()=>import('../features/sales-history/sales-hystory.route').then(m=>m.routes) },
     ]
   }
 ];

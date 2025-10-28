@@ -1,0 +1,36 @@
+.receipt {
+  padding: 12px;
+}
+
+.hero {
+  text-align: center;
+  padding: 8px 0 4px;
+}
+.logo {
+  margin: 0 auto 6px; width: 56px; height: 56px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
+}
+.title { font-weight: 800; font-size: 18px; }
+.muted { font-size: 12px; opacity: .75; }
+
+.meta ion-item, .totals ion-item { --inner-padding-end: 0; }
+
+.lines .hdr {
+  --background: #fafafa;
+  border-radius: 10px;
+  margin: 4px 0;
+  padding: 0 6px;
+}
+.ln { font-weight: 700; }
+.foot { text-align: center; font-size: 12px; opacity:.8; margin-top: 8px; }
+
+.receipt { padding: 12px; }
+.hero { text-align: center; padding: 8px 0 4px; }
+.logo { margin: 0 auto 6px; width: 56px; height: 56px; box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+.title { font-weight: 800; font-size: 18px; }
+.muted { font-size: 12px; opacity: .75; }
+
+.meta ion-item, .totals ion-item { --inner-padding-end: 0; }
+.lines .hdr { --background: #fafafa; border-radius: 10px; margin: 4px 0; padding: 0 6px; }
+.ln { font-weight: 700; }
+.foot { text-align: center; font-size: 12px; opacity:.8; margin-top: 8px; }

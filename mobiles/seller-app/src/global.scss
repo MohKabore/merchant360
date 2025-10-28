@@ -34,8 +34,9 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+// @import '@ionic/angular/css/palettes/dark.system.css';
 
+html { color-scheme: light; }
 :root{
   --bg:#FAFAFB; --card:#FFFFFF; --ink:#1F2937; --muted:#6B7280;
   --pri:#8E0E1B; --sec:#1B998B; --ok:#10B981; --warn:#F59E0B; --err:#EF4444;
