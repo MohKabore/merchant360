@@ -52,4 +52,64 @@ export class FakeDataService {
     const skip = params?.skip ?? 0; const take = params?.take ?? 50;
     return items.slice(skip, skip+take);
   }
+
+    private async saveCache(){
+    await set('merchant360:seed:v1', { cats:this.cats, products:this.products });
+  }
+
+  private slugify(s:string){
+    return (s || '').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)+/g,'');
+  }
+
+  async getProductById(id:string){
+    await this.init();
+    return this.products.find(p=>p.id===id) ?? null;
+  }
+
+  async upsertProduct(input: Partial<Product> & { id?: string }){
+    await this.init();
+
+    // sanitize minimal
+    const now = new Date().toISOString();
+    const isNew = !input.id;
+
+    const pId = input.id ?? faker.string.uuid();
+    const cat = input.categoryId
+      ? this.cats.find(c=>c.id===input.categoryId) ?? this.cats[0]
+      : this.cats[0];
+
+    const existingIdx = this.products.findIndex(p=>p.id===pId);
+
+    const base: Product = existingIdx >= 0
+      ? { ...this.products[existingIdx] }
+      : {
+          id: pId,
+          tenantId: 'tenant-demo',
+          name: '',
+          slug: '',
+          price: 0,
+          currency: 'XOF',
+          stockOnHand: 0,
+          categoryId: cat.id,
+          images: [],
+          createdAt: now,
+          isActive: true
+        };
+
+    const updated: Product = {
+      ...base,
+      ...input,
+      name: (input.name ?? base.name).toString(),
+      slug: this.slugify(input.slug ?? input.name ?? base.name ?? ''),
+      updatedAt: now,
+      categoryId: cat.id,
+      images: (input as any)?.images ?? base.images
+    };
+
+    if (existingIdx >= 0) this.products[existingIdx] = updated;
+    else this.products.unshift(updated); // nouveau en tête
+
+    await this.saveCache();
+    return updated;
+  }
 }

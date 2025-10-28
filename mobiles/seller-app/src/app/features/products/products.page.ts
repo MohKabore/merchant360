@@ -68,7 +68,7 @@ export class ProductsPage {
   async loadMore(){ if(this.eof) return; this.skip += this.pageSize; await this.reloadList(false); }
 
   goNew(){ this.router.navigateByUrl('/product/new'); }
-  goEdit(id:string){ this.router.navigate(['/product', id]); }
+  goEdit(id:string){ this.router.navigate(['tabs/products', id]); }
 
   async confirmDelete(p:Product){
     const a = await this.alert.create({

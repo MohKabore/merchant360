@@ -1,0 +1,115 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/tabs/products"></ion-back-button></ion-buttons>
+    <ion-title>{{ isNew ? 'Nouveau produit' : 'Modifier le produit' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen="true" class="ion-padding">
+
+  <!-- Média / Galerie -->
+  <div class="card media">
+    <div class="grid">
+      <!-- Couverture (index 0) -->
+      <div class="tile cover" *ngIf="images.length">
+        <img [src]="images[0]" alt="cover">
+        <div class="badge">Couverture</div>
+        <div class="actions">
+          <ion-button fill="clear" size="small" (click)="removeImage(0)">
+            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" (click)="moveRight(0)" [disabled]="images.length<2">
+            <ion-icon name="chevron-forward-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+
+      <!-- Autres images -->
+      <div class="tile" *ngFor="let img of images.slice(1); let i = index">
+        <img [src]="img" alt="img">
+        <div class="actions">
+          <ion-button fill="clear" size="small" (click)="moveLeft(i+1)">
+            <ion-icon name="chevron-back-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" (click)="moveRight(i+1)">
+            <ion-icon name="chevron-forward-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" (click)="setCover(i+1)" title="Définir en couverture">
+            <ion-icon name="star-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" color="danger" (click)="removeImage(i+1)">
+            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+
+      <!-- Tuile d'ajout -->
+      <label class="tile add">
+        <input type="file" accept="image/*" multiple (change)="onFilesSelected($event)"/>
+        <div class="add-inner">
+          <ion-icon name="image-outline"></ion-icon>
+          <div>Ajouter des images</div>
+          <div class="hint">({{ images.length }}/{{ maxImages }})</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form [formGroup]="form" class="form">
+    <ion-list lines="full" class="card">
+      <ion-item class="req" [class.invalid]="f.name.invalid && f.name.touched">
+        <ion-label position="stacked">Nom du produit</ion-label>
+        <ion-input formControlName="name" placeholder="Ex: Huile de coco 500ml"></ion-input>
+      </ion-item>
+
+      <div class="row2">
+        <ion-item class="req" [class.invalid]="f.price.invalid && f.price.touched">
+          <ion-label position="stacked">Prix</ion-label>
+          <ion-input type="number" formControlName="price"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Devise</ion-label>
+          <ion-select formControlName="currency">
+            <ion-select-option value="XOF">XOF</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+
+      <ion-item class="req" [class.invalid]="f.categoryId.invalid && f.categoryId.touched">
+        <ion-label position="stacked">Catégorie</ion-label>
+        <ion-select formControlName="categoryId" interface="popover">
+          <ion-select-option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item class="req" [class.invalid]="f.stockOnHand.invalid && f.stockOnHand.touched">
+        <ion-label position="stacked">Stock</ion-label>
+        <ion-input type="number" formControlName="stockOnHand"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Actif</ion-label>
+        <ion-toggle formControlName="isActive"></ion-toggle>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Description</ion-label>
+        <ion-textarea formControlName="description" rows="4" placeholder="Détails, conseils d’usage…"></ion-textarea>
+      </ion-item>
+    </ion-list>
+  </form>
+
+  <!-- Espace pour CTA -->
+  <div class="spacer"></div>
+
+  <!-- CTA collant -->
+  <div class="bottom-cta">
+    <ion-button fill="outline" (click)="cancel()">Annuler</ion-button>
+    <ion-button color="primary" [disabled]="saving || form.invalid" (click)="save()">
+      <ion-spinner *ngIf="saving" name="crescent"></ion-spinner>
+      <span *ngIf="!saving">Enregistrer</span>
+    </ion-button>
+  </div>
+</ion-content>

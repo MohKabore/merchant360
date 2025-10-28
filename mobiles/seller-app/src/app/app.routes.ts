@@ -10,6 +10,11 @@ export const routes: Routes = [
   // { path:'product/:id', loadChildren: () => import('./features/product-edit/product-edit.routes').then(m => m.PRODUCT_EDIT_ROUTES) },
 
   { path:'**', redirectTo:'tabs' },
+  {
+    path: 'product-edit',
+    loadComponent: () => import('./features/products/product-edit/product-edit.page').then( m => m.ProductEditPage)
+  },
+ 
   // {
   //   path: 'filter-sheet',
   //   loadComponent: () => import('./features/filter-sheet/filter-sheet.page').then( m => m.FilterSheetPage)

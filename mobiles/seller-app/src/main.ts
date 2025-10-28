@@ -7,13 +7,19 @@ import { AppComponent } from './app/app.component';
 import { addIcons } from 'ionicons';
 import {
   addOutline, homeOutline, pricetagsOutline, flashOutline, settingsOutline,
-  cubeOutline, createOutline, trashOutline, searchOutline, funnelOutline
+  cubeOutline, createOutline, searchOutline, funnelOutline,
+  imageOutline, trashOutline,
+  chevronBackOutline, chevronForwardOutline,
+  starOutline
 } from 'ionicons/icons';
 import { slideYFade } from './app/animations';
 
 addIcons({
   addOutline, homeOutline, pricetagsOutline, flashOutline, settingsOutline,
   cubeOutline, createOutline, trashOutline, searchOutline, funnelOutline,
+  imageOutline, 
+  chevronBackOutline, chevronForwardOutline,
+  starOutline
 });
 bootstrapApplication(AppComponent, {
   providers: [

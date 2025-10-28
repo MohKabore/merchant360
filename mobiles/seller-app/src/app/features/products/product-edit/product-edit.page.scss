@@ -1,0 +1,84 @@
+ion-content {
+  --padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 96px);
+}
+
+/* ------- Carte média / Galerie ------- */
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--sh-sm);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.media { padding: 12px; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Couverture large (1x2) si assez d’espace */
+@media (min-width: 380px) {
+  .cover { grid-column: span 2; }
+}
+
+.tile {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f3f4f6;
+  min-height: 120px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,.04);
+}
+.tile img { width: 100%; height: 100%; object-fit: cover; }
+
+.badge {
+  position: absolute; left: 10px; top: 10px;
+  background: rgba(0,0,0,.75); color: #fff;
+  font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 999px;
+}
+
+.actions {
+  position: absolute; right: 6px; bottom: 6px;
+  display: flex; gap: 2px;
+  background: rgba(255,255,255,.6);
+  border-radius: 10px; padding: 2px;
+  backdrop-filter: blur(6px);
+}
+
+.add {
+  cursor: pointer;
+  border: 1px dashed #d8d8d8;
+}
+.add input { display: none; }
+.add .add-inner {
+  color: var(--muted);
+  text-align: center;
+  display: grid; place-items: center; gap: 6px;
+}
+.add ion-icon { font-size: 22px; color: var(--pri); }
+
+/* ------- Form ------- */
+.form .card { padding: 6px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 0 6px; }
+ion-item.req.invalid { --highlight-color-focused: var(--err); }
+ion-item.req.invalid .label-text,
+ion-item.req.invalid ion-input { color: var(--err); }
+
+/* CTA bas collant */
+.bottom-cta {
+  position: fixed;
+  left: 12px; right: 12px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + var(--tabbar-height, 56px) + 12px);
+  display: flex; gap: 10px; justify-content: space-between;
+  z-index: 10;
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,.08));
+}
+.bottom-cta ion-button { flex: 1; height: 48px; border-radius: 14px; }
+.bottom-cta ion-button[color="primary"] { --background: var(--pri); --color: #fff; }
+
+.spacer { height: 110px; }
