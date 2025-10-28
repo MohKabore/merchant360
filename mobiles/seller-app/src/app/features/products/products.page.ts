@@ -9,11 +9,17 @@ import { CategoryChipsComponent } from 'src/app/core/ui/category-chips/category-
 import { ProductItemComponent } from 'src/app/core/ui/product-item/product-item.component';
 import { SearchToolbarComponent } from 'src/app/core/ui/search-toolbar/search-toolbar.component';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { CategoryDockComponent } from 'src/app/core/ui/category-dock/category-dock.component';
+import { CategoryGridComponent } from 'src/app/core/ui/category-grid/category-grid.component';
 
 @Component({
   standalone:true,
   selector:'app-products',
-  imports:[CommonModule, IonicModule, FormsModule, SearchToolbarComponent, CategoryChipsComponent, ProductItemComponent],
+  imports:[CommonModule, IonicModule, FormsModule, SearchToolbarComponent
+    , CategoryDockComponent
+    // ,CategoryGridComponent
+    , ProductItemComponent
+  ],
   templateUrl:'./products.page.html',
   styleUrls:['./products.page.scss']
 })

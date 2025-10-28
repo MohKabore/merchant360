@@ -1,16 +1,22 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Produits</ion-title>
-    <ion-buttons slot="end"><ion-button (click)="goNew()"><ion-icon name="add-outline"></ion-icon></ion-button></ion-buttons>
+    <ion-buttons slot="end"><ion-button (click)="goNew()"><ion-icon
+          name="add-outline"></ion-icon></ion-button></ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen="true">
-  <!-- Filtres réutilisables -->
-  <app-search-toolbar [(value)]="search" (valueChange)="onSearchChange($event)" placeholder="Rechercher un produit…"></app-search-toolbar>
-  <app-category-chips [categories]="categories" [selected]="selectedCategoryId" (changed)="onCategoryChange($event)"></app-category-chips>
+  <app-search-toolbar [(value)]="search" (valueChange)="onSearchChange($event)"
+    placeholder="Rechercher un produit…"></app-search-toolbar>
 
-  <!-- Liste animée -->
+  <app-category-dock [categories]="categories" [selected]="selectedCategoryId" [counts]="undefined" [showCount]="false"
+    (changed)="onCategoryChange($event)">
+  </app-category-dock>
+
+  <!-- <app-category-grid [categories]="categories" subLabel="Voir les produits" (changed)="onCategoryChange($event)">
+  </app-category-grid> -->
+
   <div class="list-enter">
     <ion-list lines="none">
       <ng-container *ngFor="let p of items; trackBy: trackId">
