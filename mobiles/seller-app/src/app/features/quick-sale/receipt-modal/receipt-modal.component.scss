@@ -34,3 +34,17 @@
 .lines .hdr { --background: #fafafa; border-radius: 10px; margin: 4px 0; padding: 0 6px; }
 .ln { font-weight: 700; }
 .foot { text-align: center; font-size: 12px; opacity:.8; margin-top: 8px; }
+
+.card{ background:#fff; border-radius:16px; box-shadow: var(--sh-sm); padding:16px; }
+h2{ margin:0 0 6px; }
+.meta{ color:var(--muted); font-size:12px; display:grid; gap:2px; margin-bottom:10px; }
+.row{ display:flex; gap:8px; align-items:center; }
+.row .name{ flex:1; font-weight:600; }
+.row .qty{ width:40px; text-align:right; }
+.row .price{ width:110px; text-align:right; }
+.row.sub{ font-size:12px; color:var(--muted); }
+.row .spacer{ flex:1; }
+.totaux{ margin-top:10px; display:grid; gap:6px; }
+.totaux > div{ display:flex; justify-content:space-between; }
+.totaux .total{ font-weight:800; font-size:18px; }
+@media print { ion-header, ion-footer { display:none; } }

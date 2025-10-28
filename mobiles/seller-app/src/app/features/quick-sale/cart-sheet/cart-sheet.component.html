@@ -15,49 +15,92 @@
       <ion-button fill="clear" color="danger" (click)="clearNow()">Vider</ion-button>
     </ion-item>
 
-    <ion-item *ngFor="let l of cart">
+    <ion-item *ngFor="let l of cart; trackBy: trackById">
       <ion-avatar slot="start"><img [src]="l.image || 'https://picsum.photos/seed/placeholder/120/120'" /></ion-avatar>
+
       <ion-label>
-        <h3>{{ l.name }}</h3>
-        <p>
-          <ion-text (click)="editPrice.emit(l)" class="tap-strong">{{ l.price | number:'1.0-0' }} {{ l.currency }}</ion-text>
-          <ion-text color="medium" style="margin-left:8px;" (click)="editLineDiscount.emit(l)">
-            Remise
-            <ng-container *ngIf="l.lineDiscount">(-{{ l.lineDiscount | number:'1.0-0' }} {{ l.currency }})</ng-container>
-          </ion-text>
+        <h3 class="ion-text-wrap">{{ l.name }}</h3>
+        <p class="ion-text-wrap">
+          <strong>{{ l.price | number:'1.0-0' }} {{ l.currency }}</strong>
+          <span style="opacity:.7; margin-left:8px;">Qté: {{ l.qty }}</span>
         </p>
+
+        <!-- Remise ligne inline -->
+        <ion-segment [ngModel]="l.lineDiscountType || 'amount'" (ngModelChange)="onLineDiscountTypeChange(l, $event)">
+          <ion-segment-button value="amount"><ion-label>Montant</ion-label></ion-segment-button>
+          <ion-segment-button value="percent"><ion-label>%</ion-label></ion-segment-button>
+        </ion-segment>
+
+        <ion-item lines="none" class="ion-margin-top">
+          <ion-input type="number"
+                     [ngModel]="l.lineDiscount || 0"
+                     (ngModelChange)="onLineDiscountValueChange(l, $event)"
+                     placeholder="0"></ion-input>
+          <ion-note slot="end">
+            <ng-container *ngIf="(l.lineDiscountType||'amount')==='amount'">{{ l.currency }}</ng-container>
+            <ng-container *ngIf="(l.lineDiscountType||'amount')==='percent'">%</ng-container>
+          </ion-note>
+        </ion-item>
+
+        <div class="ion-text-right ion-padding-top">
+          <ion-note>Net ligne: {{ (l.price*l.qty - ((l.lineDiscountType==='percent') ? (l.price*l.qty*(l.lineDiscount||0)/100) : (l.lineDiscount||0))) | number:'1.0-0' }} {{ l.currency }}</ion-note>
+        </div>
       </ion-label>
+
       <ion-buttons slot="end">
-        <ion-button fill="clear" (click)="dec.emit(l)"><ion-icon name="remove-outline"></ion-icon></ion-button>
+        <ion-button fill="clear" (click)="onDec(l)"><ion-icon name="remove-outline"></ion-icon></ion-button>
         <ion-chip>{{ l.qty }}</ion-chip>
-        <ion-button fill="clear" (click)="inc.emit(l)"><ion-icon name="add-outline"></ion-icon></ion-button>
-        <ion-button fill="clear" color="danger" (click)="rm.emit(l)"><ion-icon name="trash-outline"></ion-icon></ion-button>
+        <ion-button fill="clear" (click)="onInc(l)"><ion-icon name="add-outline"></ion-icon></ion-button>
+        <ion-button fill="clear" color="danger" (click)="onRemove(l)"><ion-icon name="trash-outline"></ion-icon></ion-button>
       </ion-buttons>
     </ion-item>
   </ion-list>
 
-  <!-- Totaux -->
+  <!-- Totaux locaux -->
   <ion-list lines="full">
     <ion-item>
       <ion-label>Sous-total</ion-label>
-      <ion-note slot="end">{{ subTotal | number:'1.0-0' }} {{ currency }}</ion-note>
+      <ion-note slot="end">{{ localSubTotal | number:'1.0-0' }} {{ currency }}</ion-note>
     </ion-item>
+
+    <!-- Remise globale -->
     <ion-item>
-      <ion-label>Remise panier</ion-label>
-      <ion-input type="number" [ngModel]="discount" (ngModelChange)="onDiscountChange($event)"></ion-input>
-      <ion-note slot="end">{{ currency }}</ion-note>
+      <ion-label position="stacked">Remise globale</ion-label>
+      <div class="ion-padding-top ion-padding-bottom" style="width:100%;">
+        <ion-segment [ngModel]="globalDiscountType" (ngModelChange)="onGlobalDiscountTypeChange($event)">
+          <ion-segment-button value="amount"><ion-label>Montant</ion-label></ion-segment-button>
+          <ion-segment-button value="percent"><ion-label>%</ion-label></ion-segment-button>
+        </ion-segment>
+
+        <div class="ion-padding-top">
+          <ion-item lines="none">
+            <ion-input type="number"
+                       [ngModel]="globalDiscountValue"
+                       (ngModelChange)="onGlobalDiscountValueChange($event)"
+                       placeholder="0"></ion-input>
+            <ion-note slot="end">
+              <ng-container *ngIf="globalDiscountType==='amount'">{{ currency }}</ng-container>
+              <ng-container *ngIf="globalDiscountType==='percent'">%</ng-container>
+            </ion-note>
+          </ion-item>
+          <ion-note color="medium" *ngIf="globalDiscountType==='percent'">
+            (= -{{ effectiveGlobalDiscountAmount() | number:'1.0-0' }} {{ currency }})
+          </ion-note>
+        </div>
+      </div>
     </ion-item>
+
     <ion-item>
       <ion-label><strong>Total</strong></ion-label>
-      <ion-note slot="end"><strong>{{ total | number:'1.0-0' }} {{ currency }}</strong></ion-note>
+      <ion-note slot="end"><strong>{{ localTotal | number:'1.0-0' }} {{ currency }}</strong></ion-note>
     </ion-item>
   </ion-list>
 
-  <!-- PAIEMENT -->
+  <!-- Paiement -->
   <ion-list lines="full">
     <ion-item>
       <ion-label>Type de paiement</ion-label>
-      <ion-segment [(ngModel)]="paymentType" (ionChange)="recompute()">
+      <ion-segment [(ngModel)]="paymentType" (ionChange)="recomputePayments()">
         <ion-segment-button value="Total"><ion-label>Total</ion-label></ion-segment-button>
         <ion-segment-button value="Partial"><ion-label>Partiel</ion-label></ion-segment-button>
         <ion-segment-button value="Credit"><ion-label>Crédit</ion-label></ion-segment-button>
@@ -84,7 +127,7 @@
 
     <ion-item *ngIf="paymentType==='Total'">
       <ion-label>Montant payé</ion-label>
-      <ion-note slot="end">{{ total | number:'1.0-0' }} {{ currency }}</ion-note>
+      <ion-note slot="end">{{ localTotal | number:'1.0-0' }} {{ currency }}</ion-note>
     </ion-item>
 
     <ng-container *ngIf="paymentType==='Partial'">
@@ -101,7 +144,7 @@
 
     <ion-item *ngIf="paymentType==='Credit'">
       <ion-label>Dû</ion-label>
-      <ion-note slot="end">{{ total | number:'1.0-0' }} {{ currency }}</ion-note>
+      <ion-note slot="end">{{ localTotal | number:'1.0-0' }} {{ currency }}</ion-note>
     </ion-item>
   </ion-list>
 </ion-content>
@@ -112,14 +155,14 @@
       <ion-row class="ion-align-items-center">
         <ion-col size="6">
           <ion-text>
-            <h2 class="ion-no-margin">{{ total | number:'1.0-0' }} {{ currency }}</h2>
+            <h2 class="ion-no-margin">{{ localTotal | number:'1.0-0' }} {{ currency }}</h2>
             <p class="ion-no-margin" style="opacity:.7">Total TTC</p>
           </ion-text>
         </ion-col>
         <ion-col size="6">
           <ion-button expand="block" color="primary" (click)="payNow()">
             <ion-icon name="cash-outline" slot="start"></ion-icon>
-            Encaisser
+            Enregistrer
           </ion-button>
         </ion-col>
       </ion-row>

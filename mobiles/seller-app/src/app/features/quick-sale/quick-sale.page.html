@@ -15,7 +15,6 @@
 </ion-header>
 
 <ion-content fullscreen="true">
-  <!-- Suggestions produits -->
   <ion-list lines="full">
     <ion-item *ngIf="loading">
       <ion-spinner slot="start" name="crescent"></ion-spinner>
@@ -28,7 +27,9 @@
         <h3>{{ p.name }}</h3>
         <p>{{ p.price | number:'1.0-0' }} {{ p.currency }}</p>
       </ion-label>
-      <ion-button fill="clear" slot="end" aria-label="Ajouter"><ion-icon name="add-outline"></ion-icon></ion-button>
+      <ion-button fill="clear" slot="end" aria-label="Ajouter">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-button>
     </ion-item>
 
     <ion-item *ngIf="!loading && suggestions.length===0">
