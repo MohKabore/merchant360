@@ -1,0 +1,12 @@
+/* espace pour que la liste ne passe pas sous le FAB + tabbar */
+ion-list { padding-bottom: 110px; }
+
+/* FAB bien au-dessus de la tabbar */
+ion-fab {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 56px + 12px); /* 56px = hauteur tabbar */
+  right: 16px;
+}
+
+/* petite anim d’entrée qui NE bloque pas les clics */
+.list-enter ion-item { opacity: 0; transform: translateY(8px); animation: rise .28s ease-out forwards; pointer-events: auto; }
+@keyframes rise { to { opacity: 1; transform: none; } }

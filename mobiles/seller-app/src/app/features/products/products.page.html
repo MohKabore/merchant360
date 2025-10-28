@@ -5,10 +5,10 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen="true">
+<ion-content fullscreen="false" style="padding: 5px;">
   <!-- Filtres réutilisables -->
-  <app-search-toolbar [(value)]="search" (valueChange)="onSearchChange($event)" placeholder="Rechercher un produit…"></app-search-toolbar>
-  <app-category-chips [categories]="categories" [selected]="selectedCategoryId" (changed)="onCategoryChange($event)"></app-category-chips>
+  <!-- <app-search-toolbar [(value)]="search" (valueChange)="onSearchChange($event)" placeholder="Rechercher un produit…"></app-search-toolbar>
+  <app-category-chips [categories]="categories" [selected]="selectedCategoryId" (changed)="onCategoryChange($event)"></app-category-chips> -->
 
   <!-- Liste animée -->
   <div class="list-enter">
