@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Category, Product } from 'src/app/core/models/dtos';
 import { FakeDataService } from 'src/app/core/services/fake-data.service';
-import { ProductItemComponent } from 'src/app/core/ui/product-item/product-item.component';
 import { SearchToolbarComponent } from 'src/app/core/ui/search-toolbar/search-toolbar.component';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CategoryDockComponent } from 'src/app/core/ui/category-dock/category-dock.component';
@@ -16,8 +15,7 @@ import { CategoryDockComponent } from 'src/app/core/ui/category-dock/category-do
   selector: 'app-products',
   imports: [CommonModule, IonicModule, FormsModule, SearchToolbarComponent
     , CategoryDockComponent
-    // ,CategoryGridComponent
-    , ProductItemComponent
+    // ,CategoryGridComponent, ProductItemComponent
   ],
   templateUrl: './products.page.html',
   styleUrls: ['./products.page.scss']

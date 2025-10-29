@@ -82,7 +82,9 @@
   </div>
 
   <!-- FAB -->
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button (click)="goNew()"><ion-icon name="add-outline"></ion-icon></ion-fab-button>
-  </ion-fab>
+ <ion-fab slot="fixed" class="edge-fab" aria-label="Ajouter un produit">
+  <ion-fab-button (click)="goNew()">
+    <ion-icon name="add-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
 </ion-content>

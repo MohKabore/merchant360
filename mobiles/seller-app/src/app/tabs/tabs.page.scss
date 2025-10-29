@@ -1,16 +1,65 @@
-.more{ display:grid; place-items:center; padding:12px; }
-.empty{ padding:32px; display:grid; place-items:center; gap:10px; color:var(--muted); }
-.empty ion-icon{ font-size:44px; color:#c9c9c9; }
+:host { --tabbar-height: 64px; }
 
-// :host { --tabbar-height: 56px; }
-
-// ion-tab-bar {
-//   height: var(--tabbar-height);
-//   z-index: 3;
-// }
-:host { --tabbar-height: 56px; }
-
-ion-tab-bar {
+ion-tab-bar.pill-tabbar{
+  position: fixed;
+  left: 16px; right: 16px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
   height: var(--tabbar-height);
-  z-index: 3;
+  padding: 8px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.86);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.12);
+  border: 1px solid rgba(0,0,0,.06);
+
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: stretch;
+  z-index: 15;
+}
+
+/* Boutons : état par défaut */
+ion-tab-bar.pill-tabbar ion-tab-button{
+  --color: var(--muted);
+  --color-selected: var(--pri);
+  border-radius: 14px;
+  transition: transform .18s ease, opacity .18s ease, background .25s ease;
+  position: relative;
+  overflow: hidden;
+}
+ion-tab-bar.pill-tabbar ion-tab-button ion-icon{ font-size: 20px; }
+ion-tab-bar.pill-tabbar ion-tab-button ion-label{ font-size: 11px; font-weight: 700; }
+
+/* Onglet sélectionné : couleur inversée */
+ion-tab-bar.pill-tabbar ion-tab-button.tab-selected {
+  background: var(--pri);
+  color: #fff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(142,14,27,.35);
+}
+ion-tab-bar.pill-tabbar ion-tab-button.tab-selected ion-icon {
+  color: #fff !important;
+  transform: scale(1.1);
+}
+ion-tab-bar.pill-tabbar ion-tab-button.tab-selected ion-label {
+  color: #fff !important;
+}
+
+/* Onglets non sélectionnés : look doux */
+ion-tab-bar.pill-tabbar ion-tab-button:not(.tab-selected){
+  opacity: .9;
+}
+ion-tab-bar.pill-tabbar{ position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 10px); height: 64px; }
+
+/* Responsive petit écran */
+@media (max-width: 360px){
+  ion-tab-bar.pill-tabbar{ --tabbar-height: 58px; }
+  ion-tab-bar.pill-tabbar ion-tab-button ion-label{ display:none; }
+}
+
+.edge-fab{
+  position: fixed;
+  right: 16px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + var(--tabbar-height) + 18px);
+  z-index: 20;
 }

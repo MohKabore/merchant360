@@ -44,3 +44,27 @@ ion-content {
   align-items: center;
   padding: 12px 0;
 }
+
+/* 1) Laisse de la place sous le contenu pour la TabBar flottante + marge CTA */
+ion-content{
+  --padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--tabbar-height, 64px) + 72px);
+}
+
+/* 2) Place le FAB au-dessus de la TabBar (même var --tabbar-height que dans tabs.page.scss) */
+.edge-fab{
+  position: fixed; /* garantit la position par rapport au viewport */
+  right: 16px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + var(--tabbar-height, 64px) + 12px);
+  z-index: 20; /* au-dessus de la tabbar flottante */
+}
+
+/* (Option) look du bouton */
+.edge-fab ion-fab-button{
+  --background: var(--pri);
+  --color: #fff;
+  width: 52px; height: 52px;
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(142,14,27,.28);
+}
+.edge-fab ion-icon{ font-size: 24px; }
+.edge-fab { outline: 1px dashed rgba(0,0,0,.2); }

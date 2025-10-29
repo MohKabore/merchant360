@@ -14,9 +14,26 @@ export type Sale = {
   cash?: number;
   change?: number;
 };
+import dayjs from 'dayjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 const picsum = (seed: string, w = 400, h = 400) => `https://picsum.photos/seed/${encodeURIComponent(seed)}/${w}/${h}`;
 const KEY = 'sales.v1';
+export type SaleLine = {
+  name: string; qty: number; price: number;
+  lineDiscount?: number;     // montant (pour % tu peux déjà avoir appliqué côté calcul)
+  currency: string;
+};
+
+
+
+export type Totals = {
+  count: number;
+  revenue: number;
+  average: number;
+  byPayment: { Cash: number; Card: number; MobileMoney: number; };
+};
+
 
 @Injectable({ providedIn: 'root' })
 export class FakeDataService {
@@ -24,7 +41,8 @@ export class FakeDataService {
   private products: Product[] = [];
   private ready = false;
   private cache: Sale[] | null = null;
-
+private countSub = new BehaviorSubject<number>(0);
+  cartCount$: Observable<number> = this.countSub.asObservable();
   async init() {
     if (this.ready) return;
     const cached = await get('merchant360:seed:v1');
@@ -137,23 +155,34 @@ export class FakeDataService {
   }
 
 
-   private async load(): Promise<Sale[]>{
-    if (this.cache) return this.cache;
-    const arr = await get<Sale[]>(KEY) || [];
-    this.cache = arr.sort((a,b)=> (b.createdAt.localeCompare(a.createdAt)));
-    return this.cache;
+  //  private async load(): Promise<Sale[]>{
+  //   if (this.cache) return this.cache;
+  //   const arr = await get<Sale[]>(KEY) || [];
+  //   this.cache = arr.sort((a,b)=> (b.createdAt.localeCompare(a.createdAt)));
+  //   return this.cache;
+  // }
+   private async load(): Promise<Sale[]> {
+    try {
+      const arr = await get(KEY) as Sale[] | undefined;
+      return Array.isArray(arr) ? arr : [];
+    } catch {
+      // fallback localStorage
+      const raw = localStorage.getItem(KEY);
+      return raw ? JSON.parse(raw) as Sale[] : [];
+    }
   }
 
-  private async save(arr: Sale[]){
-    this.cache = arr;
-    await set(KEY, arr);
-  }
 
-  async add(s: Sale){
-    const arr = await this.load();
-    arr.unshift(s);
-    await this.save(arr);
-  }
+  // private async save(arr: Sale[]){
+  //   this.cache = arr;
+  //   await set(KEY, arr);
+  // }
+
+  // async add(s: Sale){
+  //   const arr = await this.load();
+  //   arr.unshift(s);
+  //   await this.save(arr);
+  // }
 
   async list(): Promise<Sale[]>{
     return await this.load();
@@ -167,4 +196,81 @@ export class FakeDataService {
   async clearAll(){
     await this.save([]);
   }
+
+
+  
+  private async save(arr: Sale[]): Promise<void> {
+    try {
+      await set(KEY, arr);
+    } catch {
+      localStorage.setItem(KEY, JSON.stringify(arr));
+    }
+  }
+
+  // ------- API -------
+  async add(s: Sale): Promise<void> {
+    const arr = await this.load();
+    arr.push(s);
+    await this.save(arr);
+  }
+
+  async all(): Promise<Sale[]> {
+    const arr = await this.load();
+    // tri du plus récent au plus ancien
+    return arr.sort((a,b) => b.createdAt.localeCompare(a.createdAt));
+  }
+
+  async between(start: Date, end: Date): Promise<Sale[]> {
+    const all = await this.all();
+    const s = start.toISOString(); const e = end.toISOString();
+    return all.filter(x => x.createdAt >= s && x.createdAt <= e);
+  }
+
+  async remove(id: string): Promise<void> {
+    const arr = await this.load();
+    const next = arr.filter(x => x.id !== id);
+    await this.save(next);
+  }
+
+  // async clear(): Promise<void> { await this.save([]); }
+
+  totals(sales: Sale[]): Totals {
+    const count = sales.length;
+    const revenue = sales.reduce((n,s)=> n + s.total, 0);
+    const average = count ? Math.round(revenue / count) : 0;
+    const byPayment = { Cash:0, Card:0, MobileMoney:0 };
+    for (const s of sales) { byPayment[s.paymentMethod] += s.total; }
+    return { count, revenue, average, byPayment };
+  }
+
+  exportCsv(sales: Sale[]): Blob {
+    const head = [
+      'ID','Date','NbArticles','SousTotal','Remise','Total','Devise','Paiement','Payé','Monnaie'
+    ].join(',');
+    const rows = sales.map(s => {
+      const nb = s.lines.reduce((n,l)=> n + l.qty, 0);
+      return [
+        s.id,
+        dayjs(s.createdAt).format('YYYY-MM-DD HH:mm'),
+        nb,
+        s.subTotal,
+        s.discount,
+        s.total,
+        s.currency,
+        s.paymentMethod,
+        s.cash,
+        s.change
+      ].join(',');
+    });
+    const csv = [head, ...rows].join('\n');
+    return new Blob([csv], { type:'text/csv;charset=utf-8' });
+
+    
+  }
+  setCount(n: number){ this.countSub.next(Math.max(0, n|0)); }
+  inc(by=1){ this.setCount((this.countSub.value || 0) + by); }
+  dec(by=1){ this.setCount((this.countSub.value || 0) - by); }
+  clear(){ this.setCount(0); }
+
+  ngOnDestroy(){ this.countSub.complete(); }
 }

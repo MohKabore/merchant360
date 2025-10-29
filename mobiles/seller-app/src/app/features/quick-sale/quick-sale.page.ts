@@ -39,6 +39,7 @@ export class QuickSalePage implements OnInit {
   private animationCtrl = inject(AnimationController);
   private modal         = inject(ModalController);
   private sales         = inject(FakeDataService);
+  
 
   // Recherche
   q = '';
@@ -66,6 +67,8 @@ export class QuickSalePage implements OnInit {
     this.loading = false;
   }
 
+   private pushCartCount(){ this.data.setCount(this.cartCount); }
+
   // ------ Panier ------
   get cartCount(){ return this.cart.reduce((n,l)=> n + l.qty, 0); }
 
@@ -81,6 +84,8 @@ export class QuickSalePage implements OnInit {
       this.currency = p.currency || 'XOF';
     }
     this.flashPlusOne(); this.bumpCartBadge();
+     this.flashPlusOne(); this.bumpCartBadge();
+    this.pushCartCount();   
   }
 
   incQty(l: CartLine){ if (l.stock != null && l.qty >= l.stock) return; l.qty++; }

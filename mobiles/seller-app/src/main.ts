@@ -15,7 +15,8 @@ import {
   ellipsisHorizontalOutline,
   printOutline,
   shareOutline,
-  closeOutline
+  closeOutline,
+   timeOutline, downloadOutline, receiptOutline
 } from 'ionicons/icons';
 import { slideYFade } from './app/animations';
 
@@ -24,7 +25,7 @@ addIcons({
   cubeOutline, createOutline, trashOutline, searchOutline, funnelOutline,
   imageOutline, removeOutline,cashOutline,ellipsisHorizontalOutline,
   chevronBackOutline, chevronForwardOutline,printOutline,shareOutline,closeOutline,
-  starOutline
+  starOutline,timeOutline, downloadOutline, receiptOutline
 });
 bootstrapApplication(AppComponent, {
   providers: [

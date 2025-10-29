@@ -1,0 +1,28 @@
+ion-content.loading { opacity: .75; pointer-events: none; }
+
+/* KPIs */
+.kpis{
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+  padding: 12px;
+}
+.kpi{
+  background: var(--card); border-radius: 16px; box-shadow: var(--sh-sm);
+  padding: 12px;
+}
+.kpi .h{ font-size: 12px; color: var(--muted); }
+.kpi .v{ font-size: 18px; font-weight: 800; margin-top: 4px; }
+.kpi .sub{ margin-top: 4px; font-size: 12px; color: var(--muted); }
+
+/* Cards ventes */
+.card.sale{
+  background: #fff; border-radius: 16px; box-shadow: var(--sh-sm);
+  padding: 10px 12px; margin: 8px 12px;
+}
+.card.sale .row1, .row2, .row3{ display:flex; justify-content:space-between; align-items:center; }
+.card.sale .row1{ font-weight:700; }
+.card.sale .row1 .id{ opacity:.9; }
+.card.sale .row1 .when{ color: var(--muted); font-size: 12px; }
+.card.sale .row2{ margin-top:6px; font-size: 14px; }
+.card.sale .row2 .items{ color: var(--muted); }
+.card.sale .row2 .paid{ font-weight: 800; }
+.card.sale .row3{ gap: 6px; margin-top: 6px; }

@@ -1,10 +1,30 @@
-<!-- tabs.page.html -->
 <ion-tabs>
-  <!-- <ion-router-outlet></ion-router-outlet> -->
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="home" routerLink="/tabs/home"><ion-icon name="home-outline"></ion-icon><ion-label>Home</ion-label></ion-tab-button>
-    <ion-tab-button tab="products" routerLink="/tabs/products"><ion-icon name="pricetags-outline"></ion-icon><ion-label>Produits</ion-label></ion-tab-button>
-    <ion-tab-button tab="quick-sale" routerLink="/tabs/quick-sale"><ion-icon name="flash-outline"></ion-icon><ion-label>Vente</ion-label></ion-tab-button>
-    <ion-tab-button tab="settings" routerLink="/tabs/settings"><ion-icon name="settings-outline"></ion-icon><ion-label>Réglages</ion-label></ion-tab-button>
+
+  <!-- TabBar "pill" flottante -->
+  <ion-tab-bar class="pill-tabbar" slot="bottom">
+    <ion-tab-button tab="home" routerLink="/tabs/home" aria-label="Accueil">
+      <ion-icon name="home-outline"></ion-icon>
+      <ion-label>Accueil</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="products" routerLink="/tabs/products" aria-label="Produits">
+      <ion-icon name="pricetags-outline"></ion-icon>
+      <ion-label>Produits</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="quick-sale" routerLink="/tabs/quick-sale" aria-label="Vente">
+      <ion-icon name="flash-outline"></ion-icon>
+      <ion-label>Vente</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="history" routerLink="/tabs/history" aria-label="Historique">
+      <ion-icon name="time-outline"></ion-icon>
+      <ion-label>Historique</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="settings" routerLink="/tabs/settings" aria-label="Réglages">
+      <ion-icon name="settings-outline"></ion-icon>
+      <ion-label>Réglages</ion-label>
+    </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>

@@ -78,3 +78,14 @@ ion-button[color="primary"] {
   --background: var(--pri);
   --color: #fff;            /* texte / icône */
 }
+
+
+.page-with-pill-tabbar ion-content{
+  --padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--tabbar-height, 64px) + 72px);
+}
+.page-with-pill-tabbar .edge-fab{
+  position: fixed;
+  right: 16px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + var(--tabbar-height, 64px) + 12px);
+  z-index: 20;
+}
