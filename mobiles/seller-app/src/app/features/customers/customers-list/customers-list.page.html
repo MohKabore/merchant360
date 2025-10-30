@@ -1,0 +1,101 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Clients</ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="quick" (ngModelChange)="onQuickChange()">
+      <ion-segment-button value="all"><ion-label>Tous</ion-label></ion-segment-button>
+      <ion-segment-button value="vip"><ion-label>VIP</ion-label></ion-segment-button>
+      <ion-segment-button value="gros"><ion-label>Gros</ion-label></ion-segment-button>
+      <ion-segment-button value="debt"><ion-label>Crédit</ion-label></ion-segment-button>
+      <ion-segment-button value="top20"><ion-label>Top20%</ion-label></ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+
+  <ion-toolbar class="stick-search">
+    <ion-searchbar
+      [(ngModel)]="q" (ionInput)="onSearch()"
+      placeholder="Rechercher (nom, téléphone, tag)…"
+      show-clear-button="focus" animated="true">
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<!-- ... header & segments & search identiques ... -->
+
+<ion-content fullscreen="true" class="has-pill-tabbar">
+  <ion-list lines="none" *ngIf="loading">
+    <ion-item><ion-label>Chargement…</ion-label></ion-item>
+  </ion-list>
+
+  <ion-list lines="none" class="c-list" *ngIf="!loading">
+    <ng-container *ngFor="let g of groups">
+      <!-- Lettre non sticky (plus aucune superposition) -->
+      <div class="section-letter" [attr.id]="'idx-'+g.key">{{ g.key }}</div>
+
+      <ion-item-sliding *ngFor="let c of g.items">
+        <ion-item class="card tap">
+
+          <!-- Avatar = CALL direct -->
+          <ion-avatar slot="start" class="avatar" (click)="call(c)">
+            <div class="circle">{{ initials(c) }}</div>
+          </ion-avatar>
+
+          <ion-label (click)="goEdit(c)">
+            <!-- LIGNE 1 — NOM SEUL -->
+            <div class="name-line">
+              <div class="name">{{ fullName(c) || c.phone }}</div>
+            </div>
+
+            <!-- LIGNE 2 — META -->
+            <div class="meta-line">
+              <span class="meta" *ngIf="c.phone"><ion-icon name="call-outline"></ion-icon>{{ c.phone }}</span>
+              <span class="sep" *ngIf="c.phone"></span>
+              <span class="meta"><ion-icon name="calendar-outline"></ion-icon>{{ lastPurchaseTxt(c) }}</span>
+            </div>
+
+            <!-- LIGNE 3 — TAGS + DÛ + TOTAL -->
+            <div class="info-line">
+              <div class="tags" *ngIf="c.tags?.length">
+                <ion-badge color="medium" *ngFor="let t of c.tags">{{ t }}</ion-badge>
+              </div>
+              <div class="right">
+                <ion-badge color="warning" *ngIf="(c.balance||0)>0">Dû {{ c.balance | number:'1.0-0' }}</ion-badge>
+                <ion-badge [color]="volBadgeColor(c)">{{ (c.totalSpent||0) | number:'1.0-0' }} XOF</ion-badge>
+              </div>
+            </div>
+          </ion-label>
+
+          <!-- BOUTON APPEL DIRECT (clairement visible) -->
+          <ion-buttons slot="end">
+            <ion-button fill="clear" (click)="call(c)" [disabled]="!c.phone">
+            <ion-icon name="call-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option (click)="whatsapp(c)">
+            <ion-icon name="logo-whatsapp" slot="icon-only"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="danger" (click)="remove(c)">
+            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ng-container>
+
+    <ion-item *ngIf="groups.length===0"><ion-label>Aucun client</ion-label></ion-item>
+  </ion-list>
+
+  <!-- Index A–Z à droite -->
+  <div class="alpha-index">
+    <button *ngFor="let l of ABC" (click)="jumpTo(l)">{{ l }}</button>
+    <button (click)="jumpTo('#')">#</button>
+  </div>
+
+  <ion-fab slot="fixed" class="edge-fab" aria-label="Nouveau client">
+    <ion-fab-button (click)="goNew()"><ion-icon name="add-outline"></ion-icon></ion-fab-button>
+  </ion-fab>
+</ion-content>

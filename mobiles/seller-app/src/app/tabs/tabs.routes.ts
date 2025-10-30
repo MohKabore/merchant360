@@ -50,6 +50,7 @@ export const routes: Routes = [
       { path:'quick-sale', loadChildren:()=>import('../features/quick-sale/quick-sale.route').then(m=>m.routes  ) },
       { path:'settings',   loadChildren:()=>import('../features/settings/settings.route').then(m=>m.routes) },
       { path:'history',   loadChildren:()=>import('../features/sales-history/sales-hystory.route').then(m=>m.routes) },
+      { path:'customers',   loadChildren:()=>import('../features/customers/customers.route').then(m=>m.routes) },
       // { path:'sales-history',   loadChildren:()=>import('../features/sales-history/sales-hystory.route').then(m=>m.routes) },
     ]
   }

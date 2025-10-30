@@ -15,17 +15,28 @@ import {
   ellipsisHorizontalOutline,
   printOutline,
   shareOutline,
-  closeOutline,
-   timeOutline, downloadOutline, receiptOutline
+  closeOutline, calendar, calendarOutline,
+   timeOutline, downloadOutline, receiptOutline,
+
+   peopleOutline,
+   logoWhatsapp,
+   callOutline
 } from 'ionicons/icons';
 import { slideYFade } from './app/animations';
 
+import { registerLocaleData } from '@angular/common';
+import fr from '@angular/common/locales/fr';
+import { LOCALE_ID } from '@angular/core';
+
+// 👇 Enregistre la locale "fr"
+registerLocaleData(fr);
+
 addIcons({
-  addOutline, homeOutline, pricetagsOutline, flashOutline, settingsOutline,
-  cubeOutline, createOutline, trashOutline, searchOutline, funnelOutline,
-  imageOutline, removeOutline,cashOutline,ellipsisHorizontalOutline,
+  addOutline, homeOutline, pricetagsOutline, flashOutline, settingsOutline,callOutline,
+  cubeOutline, createOutline, trashOutline, searchOutline, funnelOutline,calendar, calendarOutline,
+  imageOutline, removeOutline,cashOutline,ellipsisHorizontalOutline,logoWhatsapp,
   chevronBackOutline, chevronForwardOutline,printOutline,shareOutline,closeOutline,
-  starOutline,timeOutline, downloadOutline, receiptOutline
+  starOutline,timeOutline, downloadOutline, receiptOutline,peopleOutline
 });
 bootstrapApplication(AppComponent, {
   providers: [

@@ -12,54 +12,49 @@ ion-tab-bar.pill-tabbar{
   box-shadow: 0 12px 30px rgba(0,0,0,.12);
   border: 1px solid rgba(0,0,0,.06);
 
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  /* 🔧 FLEX: pas de retour à la ligne */
+  display: flex;
+  justify-content: space-between;
   align-items: stretch;
+  gap: 6px;
+  white-space: nowrap;   /* évite toute casse */
+  overflow: hidden;      /* évite les débordements visuels */
   z-index: 15;
 }
 
-/* Boutons : état par défaut */
+/* Chaque bouton prend la même place, s’écrase si besoin */
 ion-tab-bar.pill-tabbar ion-tab-button{
-  --color: var(--muted);
-  --color-selected: var(--pri);
+  flex: 1 1 0;
+  min-width: 0;                 /* autorise le shrink */
   border-radius: 14px;
+  --color: var(--muted);
+  --color-selected: #fff;
   transition: transform .18s ease, opacity .18s ease, background .25s ease;
-  position: relative;
-  overflow: hidden;
 }
-ion-tab-bar.pill-tabbar ion-tab-button ion-icon{ font-size: 20px; }
-ion-tab-bar.pill-tabbar ion-tab-button ion-label{ font-size: 11px; font-weight: 700; }
 
-/* Onglet sélectionné : couleur inversée */
-ion-tab-bar.pill-tabbar ion-tab-button.tab-selected {
+/* Icônes & labels */
+ion-tab-bar.pill-tabbar ion-tab-button ion-icon{ font-size: 20px; }
+ion-tab-bar.pill-tabbar ion-tab-button ion-label{
+  font-size: 11px; font-weight: 700;
+}
+
+/* Sélection inversée (fond plein) */
+ion-tab-bar.pill-tabbar ion-tab-button.tab-selected{
   background: var(--pri);
   color: #fff !important;
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(142,14,27,.35);
 }
-ion-tab-bar.pill-tabbar ion-tab-button.tab-selected ion-icon {
-  color: #fff !important;
-  transform: scale(1.1);
-}
-ion-tab-bar.pill-tabbar ion-tab-button.tab-selected ion-label {
+ion-tab-bar.pill-tabbar ion-tab-button.tab-selected ion-icon,
+ion-tab-bar.pill-tabbar ion-tab-button.tab-selected ion-label{
   color: #fff !important;
 }
 
-/* Onglets non sélectionnés : look doux */
-ion-tab-bar.pill-tabbar ion-tab-button:not(.tab-selected){
-  opacity: .9;
-}
-ion-tab-bar.pill-tabbar{ position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 10px); height: 64px; }
+/* Non sélectionné un peu adouci */
+ion-tab-bar.pill-tabbar ion-tab-button:not(.tab-selected){ opacity: .9; }
 
-/* Responsive petit écran */
-@media (max-width: 360px){
+/* 🔎 Très petits écrans : icons-only, pour tenir sur une ligne */
+@media (max-width: 380px){
   ion-tab-bar.pill-tabbar{ --tabbar-height: 58px; }
   ion-tab-bar.pill-tabbar ion-tab-button ion-label{ display:none; }
-}
-
-.edge-fab{
-  position: fixed;
-  right: 16px;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + var(--tabbar-height) + 18px);
-  z-index: 20;
 }
