@@ -9,7 +9,7 @@ export type Customer = {
   address?: string;
   tags?: string[];           // ["VIP"], ["Gros"], ["Fidèle"]
 
-  notes?: string;
+  notes?: any;
 
   // Métriques commerciales
   ordersCount?: number;      // nb de commandes

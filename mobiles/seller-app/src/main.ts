@@ -20,7 +20,10 @@ import {
 
    peopleOutline,
    logoWhatsapp,
-   callOutline
+   callOutline,
+   mailOutline,
+   cardOutline,
+   documentTextOutline
 } from 'ionicons/icons';
 import { slideYFade } from './app/animations';
 
@@ -34,9 +37,15 @@ registerLocaleData(fr);
 addIcons({
   addOutline, homeOutline, pricetagsOutline, flashOutline, settingsOutline,callOutline,
   cubeOutline, createOutline, trashOutline, searchOutline, funnelOutline,calendar, calendarOutline,
-  imageOutline, removeOutline,cashOutline,ellipsisHorizontalOutline,logoWhatsapp,
+  imageOutline, removeOutline,ellipsisHorizontalOutline,logoWhatsapp,
   chevronBackOutline, chevronForwardOutline,printOutline,shareOutline,closeOutline,
-  starOutline,timeOutline, downloadOutline, receiptOutline,peopleOutline
+  starOutline,timeOutline, downloadOutline, receiptOutline,peopleOutline,
+  'call-outline': callOutline,
+  'logo-whatsapp': logoWhatsapp,
+  'mail-outline': mailOutline,
+  'cash-outline': cashOutline,
+  'card-outline': cardOutline,
+  'document-text-outline': documentTextOutline,
 });
 bootstrapApplication(AppComponent, {
   providers: [

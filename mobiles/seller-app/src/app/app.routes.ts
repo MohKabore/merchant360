@@ -9,6 +9,7 @@ export const routes: Routes = [
       { path:'sales-history',   loadChildren:()=>import('./features/sales-history/sales-hystory.route').then(m=>m.routes) },
 
   { path:'**', redirectTo:'tabs' },
+ 
 
  
 ];

@@ -1,0 +1,40 @@
+.card{
+  background:#fff; border-radius:16px; box-shadow: var(--sh-sm); margin:12px;
+}
+
+/* Bandeau identité */
+.id-card .row{ display:flex; gap:12px; align-items:flex-start; }
+.id-card .avatar .circle{
+  width:56px; height:56px; border-radius:50%;
+  display:grid; place-items:center; font-weight:800; color:var(--ink);
+  background: linear-gradient(135deg, rgba(142,14,27,.12), rgba(27,153,139,.12));
+}
+.id-card .id-texts .name{
+  font-weight:900; font-size:18px; letter-spacing:.2px;
+  overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+}
+.id-card .id-texts .meta{
+  display:flex; align-items:center; gap:10px; margin-top:4px; color:var(--muted); font-size:12.5px;
+}
+.id-card .id-texts .meta ion-icon{ font-size:14px; color:var(--muted); }
+.id-card .id-texts .meta .sep{ width:4px; height:4px; border-radius:50%; background:#d0d0d0; }
+.id-card .tags{ display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
+.tag-toggles{ display:flex; gap:8px; }
+
+/* KPIs */
+.kpis .kpi{
+  background:#fff; border-radius:12px; padding:8px; display:grid; gap:6px;
+}
+.kpis .k-label{ color:var(--muted); font-size:12.5px; }
+.kpis .k-value{ font-weight:800; }
+
+/* Actions */
+.actions .act-row{ display:grid; gap:10px; }
+@media (min-width: 420px){
+  .actions .act-row{ grid-template-columns: 1fr 1fr 1fr; }
+}
+
+/* Notes */
+.notes .n-text{ font-size:14px; }
+.modal-cta{ display:flex; gap:10px; justify-content:space-between; margin-top:20px; }
+.modal-cta ion-button{ flex:1; height:48px; border-radius:14px; }
